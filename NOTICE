@@ -1,0 +1,30 @@
+decider-mlx
+===========
+
+Unofficial Apple Silicon runtime adaptation for Mapika Decider.
+This project does not train a new model and is not affiliated with or endorsed
+by Mapika, Alibaba/Qwen, or Apple.
+
+Upstream model and decision semantics:
+  Mapika/decider — https://github.com/Mapika/decider
+  Source revision: a5120cce45b9ff70964fac54ea6e8c1ac5b08c7f
+  Apache License 2.0; see LICENSE.
+  Model: https://huggingface.co/Mapika/decider-4b
+  Tested v1 revision: c23ab4d2483e7c6a93484463e9afe1688b29bedd
+  Model/base-model licenses and attribution apply separately to downloaded weights.
+
+MLX runtime and recurrent-kernel basis:
+  mlx-lm — https://github.com/ml-explore/mlx-lm
+  Tested package version: 0.31.3
+  Copyright © 2023 Apple Inc.
+  MIT License; full text retained in licenses/MLX-LM-MIT.txt.
+  The packed gated-delta implementation is a modified specialization of the
+  MLX-LM recurrent implementation; it is not claimed as an original model.
+
+Modifications in this distribution include local FP16 streaming conversion,
+explicit model/source configuration, native typed-answer integration,
+within-request prefix reuse, packed recurrent dispatch, packaging and tests.
+Floating-point/backend changes can change outputs. No universal numerical
+identity or full stock-versus-ported 4B speedup is claimed.
+
+No checkpoint weights, private experiment inputs, or personal logs are bundled.

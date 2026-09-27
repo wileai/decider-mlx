@@ -1,0 +1,137 @@
+{
+  "status": "Historical research measurements; not a rerun of the packaged release",
+  "hardware": "Apple M4, 16 GiB unified memory",
+  "versions": {
+    "mlx": "0.32.2",
+    "mlx-lm": "0.31.3",
+    "transformers": "5.17.0"
+  },
+  "source_metrics_sha256": "58d5e19b36d56ad6b221d11554d7683bcf9580f33dbfffc623e7d20e2a038859",
+  "model": "Mapika/decider-4b",
+  "revision": "c23ab4d2483e7c6a93484463e9afe1688b29bedd",
+  "records": [
+    {
+      "arm": "baseline-screen",
+      "requested": 951,
+      "correct": 823,
+      "errors": 0,
+      "latency_ms": {
+        "samples": 951,
+        "p50": 697.773457999574,
+        "p95": 3399.8615000018617,
+        "max": 9490.437541986466,
+        "over200": 945,
+        "over300": 843,
+        "over200_rate": 0.9936908517350158,
+        "over300_rate": 0.886435331230284
+      },
+      "memory": {
+        "rss_peak_bytes": 6020481024,
+        "mlx_active_bytes": 8413154314,
+        "mlx_peak_bytes": 10086641646,
+        "mlx_cache_bytes": 0
+      },
+      "scope": "screen"
+    },
+    {
+      "arm": "baseline-holdout",
+      "requested": 360,
+      "correct": 333,
+      "errors": 0,
+      "latency_ms": {
+        "samples": 360,
+        "p50": 723.4616869973252,
+        "p95": 5121.2984589947155,
+        "max": 5332.58891600417,
+        "over200": 360,
+        "over300": 360,
+        "over200_rate": 1.0,
+        "over300_rate": 1.0
+      },
+      "memory": {
+        "rss_peak_bytes": 7311671296,
+        "mlx_active_bytes": 8413154314,
+        "mlx_peak_bytes": 9804123684,
+        "mlx_cache_bytes": 0
+      },
+      "scope": "holdout"
+    },
+    {
+      "arm": "baseline-dev",
+      "requested": 72,
+      "correct": 66,
+      "errors": 0,
+      "latency_ms": {
+        "samples": 72,
+        "p50": 712.8636249981355,
+        "p95": 5032.212333011557,
+        "max": 5127.828374999808,
+        "over200": 72,
+        "over300": 72,
+        "over200_rate": 1.0,
+        "over300_rate": 1.0
+      },
+      "memory": {
+        "rss_peak_bytes": 6939312128,
+        "mlx_active_bytes": 8413154314,
+        "mlx_peak_bytes": 9777351482,
+        "mlx_cache_bytes": 0
+      },
+      "scope": "dev"
+    },
+    {
+      "arm": "q8-mlp-dev",
+      "requested": 72,
+      "correct": 66,
+      "errors": 0,
+      "latency_ms": {
+        "samples": 72,
+        "p50": 779.1921874959371,
+        "p95": 5472.568166995188,
+        "max": 5532.082249992527,
+        "over200": 72,
+        "over300": 72,
+        "over200_rate": 1.0,
+        "over300_rate": 1.0
+      },
+      "memory": {
+        "rss_peak_bytes": 6595788800,
+        "mlx_active_bytes": 6431345674,
+        "mlx_peak_bytes": 8055818996,
+        "mlx_cache_bytes": 0
+      },
+      "scope": "dev"
+    },
+    {
+      "arm": "q8-wide-dev",
+      "requested": 72,
+      "correct": 66,
+      "errors": 0,
+      "latency_ms": {
+        "samples": 72,
+        "p50": 814.6475625035237,
+        "p95": 5684.550999998464,
+        "max": 5721.4078749966575,
+        "over200": 72,
+        "over300": 72,
+        "over200_rate": 1.0,
+        "over300_rate": 1.0
+      },
+      "memory": {
+        "rss_peak_bytes": 7090716672,
+        "mlx_active_bytes": 5293640714,
+        "mlx_peak_bytes": 6961335028,
+        "mlx_cache_bytes": 0
+      },
+      "scope": "dev"
+    }
+  ],
+  "limitations": [
+    "Screening combines reused synthetic actionability and public-derived cases; not an official benchmark score.",
+    "Holdout is same-author synthetic, not independent human adjudication.",
+    "Raw fixtures and local outputs are intentionally not distributed; source hash alone does not enable independent reproduction.",
+    "p50/p95 are full independent-question timings, not batch averages.",
+    "No complete stock-versus-ported4Bv1 control was performed.",
+    "MLX memory and process RSS overlap and must not be summed."
+  ]
+}
