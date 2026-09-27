@@ -1,0 +1,35 @@
+[build-system]
+requires = ["setuptools==82.0.1", "wheel==0.46.3"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "decider-mlx"
+version = "0.1.0"
+description = "FP16 MLX inference for Decider 4B v1 on Apple Silicon"
+requires-python = ">=3.11,<3.13"
+readme = "README.md"
+license-files = ["LICENSE", "NOTICE", "licenses/*.txt"]
+dependencies = [
+  "mlx==0.32.2",
+  "mlx-lm==0.31.3",
+  "numpy==1.26.4",
+  "transformers==5.17.0",
+  "tokenizers==0.23.2",
+  "safetensors==0.8.0",
+  "huggingface-hub==1.32.0",
+]
+
+[project.optional-dependencies]
+test = ["pytest==9.1.1"]
+
+[project.scripts]
+decider-mlx = "decider_mlx.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+addopts = "-p no:cacheprovider --basetemp=.test-tmp"
+markers = ["metal: tiny Metal kernel tests (no checkpoint)"]

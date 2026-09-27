@@ -7,7 +7,8 @@ by Mapika, Alibaba/Qwen, or Apple.
 
 Upstream model and decision semantics:
   Mapika/decider — https://github.com/Mapika/decider
-  Source revision: a5120cce45b9ff70964fac54ea6e8c1ac5b08c7f
+  Audited prompt/readout revision: b44b4c9880a67291206499b86aac89004850134a
+  The packaged loader verifies exact prompt.py/systemone.py SHA-256 values.
   Apache License 2.0; see LICENSE.
   Model: https://huggingface.co/Mapika/decider-4b
   Tested v1 revision: c23ab4d2483e7c6a93484463e9afe1688b29bedd

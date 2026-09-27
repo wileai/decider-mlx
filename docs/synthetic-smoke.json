@@ -1,0 +1,69 @@
+{
+  "scope": "Three synthetic smoke calls from clean installed package. First call includes cold kernels; not a benchmark or parity proof.",
+  "state": "The demo package has been delivered. Its status is delivered. This is a shipping support request, not a sales inquiry.",
+  "results": [
+    {
+      "question": "arrived",
+      "response": {
+        "model": "decider-4b-v1-native-mlx-fp16",
+        "answers": {
+          "arrived": {
+            "type": "noul",
+            "noul": 0.9997
+          }
+        }
+      },
+      "latency_ms": 1150.7478749990696
+    },
+    {
+      "question": "route",
+      "response": {
+        "model": "decider-4b-v1-native-mlx-fp16",
+        "answers": {
+          "route": {
+            "type": "choice",
+            "choice": "support",
+            "confidence": 0.9998,
+            "certainty": 0.9968,
+            "probabilities": {
+              "support": 0.9998,
+              "sales": 0.0002
+            }
+          }
+        }
+      },
+      "latency_ms": 171.79729101189878
+    },
+    {
+      "question": "status",
+      "response": {
+        "model": "decider-4b-v1-native-mlx-fp16",
+        "answers": {
+          "status": {
+            "type": "score",
+            "score": 2.0,
+            "confidence": 0.9989,
+            "certainty": 0.992,
+            "legend": {
+              "0": "Not dispatched",
+              "1": "In transit",
+              "2": "Delivered"
+            },
+            "probabilities": {
+              "0": 0.0002,
+              "1": 0.0008,
+              "2": 0.9989
+            },
+            "level_fit": {
+              "0": 0.0002,
+              "1": 0.0008,
+              "2": 0.996
+            },
+            "fit_mass": 0.997
+          }
+        }
+      },
+      "latency_ms": 421.2620829930529
+    }
+  ]
+}

@@ -2,7 +2,56 @@
 
 Unofficial Apple Silicon runtime adaptation for [Mapika Decider](https://github.com/Mapika/decider), using MLX/Metal.
 
-**Initial repository preparation:** attribution, privacy policy and sanitized historical measurements are available. The installable runtime is still being packaged and verified; this commit is not a runnable release.
+**Experimental runnable package.** Verified with a clean Python 3.11 environment on Apple Silicon, 29 unit/integration tests (including tiny Metal tensors), and real-checkpoint Boolean, Choice and Score smoke calls. This is not a production service or a full packaged-release benchmark rerun.
+
+## Install and run
+
+Requires Apple Silicon macOS, Python 3.11 or 3.12, and enough available unified memory for the approximately 8 GiB model plus runtime and the OS. The tested host had 16 GiB; fit is not guaranteed under competing load. The default state limit is 2,048 tokens; longer inputs are rejected rather than silently truncated. The historical research screen explicitly used 32,768, which is not a memory-safety guarantee.
+
+```bash
+# With uv installed:
+uv venv --python 3.11 .venv
+source .venv/bin/activate
+uv pip install '.[test]'
+
+# Fetch only the two SHA-256-verified upstream prompt/readout modules.
+decider-mlx fetch-source ./decider-source
+
+# Original public weights; download is explicit and may be several GiB.
+hf download Mapika/decider-4b \
+  --revision c23ab4d2483e7c6a93484463e9afe1688b29bedd \
+  --include '*.json' '*.safetensors' --local-dir ./checkpoint
+
+# One synthetic example, not an application action.
+decider-mlx decide --checkpoint ./checkpoint \
+  --upstream-source ./decider-source --example
+
+# Tests use tiny tensors, not a downloaded checkpoint.
+python -m pytest --upstream-source ./decider-source
+```
+
+Install from a clone of this repository; no PyPI release is implied. With pip, use a separate Python 3.11/3.12 virtual environment and `python -m pip install '.[test]'`. `python -m decider_mlx` is equivalent to the console command.
+
+### Python API
+
+```python
+from decider_mlx import Decider
+
+model = Decider('./checkpoint', './decider-source')
+answer = model.decide(
+    'The demo parcel has been delivered.',
+    {'arrived': {'type': 'noul', 'instructions': 'Has the parcel arrived?'}},
+)
+print(answer)
+```
+
+`decider-mlx example` prints a synthetic request without loading a model. Pass a JSON object with exactly `state` and `questions` using `decider-mlx decide --checkpoint ./checkpoint --upstream-source ./decider-source --request request.json` or `--stdin`. Choice criteria are ordered ID→description mappings; Score criteria are ordered descriptions. Typed output probabilities are model judgments, not permission to execute an action.
+
+The runtime is intentionally restricted to compatible unquantized v1 configurations. Compatibility checks do not establish weight authenticity; use the pinned download revision. Upstream prompt/readout files are byte-verified against `b44b4c9880a67291206499b86aac89004850134a` rather than an unverified moving checkout.
+
+### Process and memory scope
+
+Use a dedicated sequential model process. MLX allocator settings are process-global, and the packed recurrent path temporarily replaces an MLX-LM module-level dispatch function under a lock. Do not run unrelated Qwen inference concurrently in that process. Cache retention is zero for the MLX allocator; upstream prompt code can still retain option strings/token IDs in an in-process CPU cache. Do not share a long-lived process between mutually untrusted tenants; exit the process to release that retained prompt data. A 9 GiB MLX allocation setting is advisory, not a hard physical-memory cap. Apply an external timeout/memory watchdog in an application. The CLI itself does not provide that watchdog. Supply only trusted checkpoint files: the streaming loader is not a sandbox for malicious or malformed model files.
 
 ## Model, not a new training run
 

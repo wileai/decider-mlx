@@ -1,0 +1,3 @@
+include LICENSE NOTICE
+recursive-include licenses *.txt
+recursive-include tests *.py
