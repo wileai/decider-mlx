@@ -45,13 +45,15 @@ answer = model.decide(
 print(answer)
 ```
 
-`decider-mlx example` prints a synthetic request without loading a model. Pass a JSON object with exactly `state` and `questions` using `decider-mlx decide --checkpoint ./checkpoint --upstream-source ./decider-source --request request.json` or `--stdin`. Choice criteria are ordered ID→description mappings; Score criteria are ordered descriptions. Typed output probabilities are model judgments, not permission to execute an action.
+`decider-mlx example` prints a synthetic request without loading a model. Pass a JSON object with exactly `state` and `questions` using `decider-mlx decide --checkpoint ./checkpoint --upstream-source ./decider-source --request .private/request.json` or `--stdin`. Choice criteria are ordered ID→description mappings; Score criteria are ordered descriptions. Typed output probabilities are model judgments, not permission to execute an action.
+
+Store private requests and reports under the Git-ignored `.private/` directory. Successful CLI output may include supplied question IDs, option names and score descriptions; treat it as sensitive. CLI errors omit exception details and paths. Python API users must sanitize their own logs.
 
 The runtime is intentionally restricted to compatible unquantized v1 configurations. Compatibility checks do not establish weight authenticity; use the pinned download revision. Upstream prompt/readout files are byte-verified against `b44b4c9880a67291206499b86aac89004850134a` rather than an unverified moving checkout.
 
 ### Process and memory scope
 
-Use a dedicated sequential model process. MLX allocator settings are process-global, and the packed recurrent path temporarily replaces an MLX-LM module-level dispatch function under a lock. Do not run unrelated Qwen inference concurrently in that process. Cache retention is zero for the MLX allocator; upstream prompt code can still retain option strings/token IDs in an in-process CPU cache. Do not share a long-lived process between mutually untrusted tenants; exit the process to release that retained prompt data. A 9 GiB MLX allocation setting is advisory, not a hard physical-memory cap. Apply an external timeout/memory watchdog in an application. The CLI itself does not provide that watchdog. Supply only trusted checkpoint files: the streaming loader is not a sandbox for malicious or malformed model files.
+Use a dedicated sequential model process. MLX allocator settings are process-global, and the packed recurrent path temporarily replaces an MLX-LM module-level dispatch function under a lock. Do not run unrelated Qwen inference concurrently in that process. Cache retention is zero for the MLX allocator, and the upstream option-text/token cache is cleared after prompt construction, including on failure. This is not secure memory erasure. Do not share a long-lived process between mutually untrusted tenants; use separate processes. A 9 GiB MLX allocation setting is advisory, not a hard physical-memory cap. Apply an external timeout/memory watchdog in an application. The CLI itself does not provide that watchdog. Supply only trusted checkpoint files: the streaming loader is not a sandbox for malicious or malformed model files.
 
 ## Model, not a new training run
 

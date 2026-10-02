@@ -12,7 +12,11 @@ dist/
 *.pem
 *.key
 models/
+checkpoint/
 checkpoints/
+/.private/
+/request.json
+/reports/
 .cache/
 outputs/
 *.safetensors

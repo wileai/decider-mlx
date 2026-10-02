@@ -15,11 +15,15 @@ Avoid committing:
 
 Review `git diff --cached` and the commit identity before pushing. A secret scanner does not replace manual review.
 
+Store requests and diagnostic reports under `.private/`, which is ignored by Git. The documented `checkpoint/` download directory is also ignored. Ignore rules do not protect files already tracked or explicitly force-added. GitHub noreply commit addresses still identify the contributor's GitHub account.
+
 ## Downloads and inference
 
 Obtain the original weights from Mapika and retain their licensing terms. Pin revisions rather than trusting a moving model tag. Do not enable remote model code from an unreviewed checkpoint.
 
 Run one model worker at a time on constrained unified-memory systems. MLX allocator limits do not replace an external resource watchdog. Inputs may contain sensitive information; do not log them by default in an application wrapper. Any included local diagnostic CLI is not an authenticated multi-user server.
+
+CLI errors use fixed messages without input values, local paths or tracebacks. Successful output can contain question IDs, Choice option names and Score descriptions; treat stdout as sensitive. Python API exceptions can include input values or paths, so wrappers must sanitize their own diagnostics. The runtime clears the upstream option cache after prompt construction, including on failure. This is not secure memory erasure or tenant isolation; use separate processes for mutually untrusted tenants.
 
 ## Reporting
 

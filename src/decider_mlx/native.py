@@ -185,12 +185,17 @@ class Decider:
         context = system.render_state(state)
         if len(self.tok.encode('Context:\n' + context, add_special_tokens=False)) > self.max_state_tokens:
             raise ValueError('State exceeds max_state_tokens; refusing truncation')
-        items = [self.upstream.prompt.build(
-            SimpleNamespace(context=context, qs=[SimpleNamespace(
-                text=row['question'], options=row['options'], gold=0)]),
-            self.tok, NoShuffle(), max_options=self.upstream.prompt.MAX_OPTIONS,
-            max_ctx_tokens=self.max_state_tokens, chat=None,
-        ) for row in rows]
+        try:
+            items = [self.upstream.prompt.build(
+                SimpleNamespace(context=context, qs=[SimpleNamespace(
+                    text=row['question'], options=row['options'], gold=0)]),
+                self.tok, NoShuffle(), max_options=self.upstream.prompt.MAX_OPTIONS,
+                max_ctx_tokens=self.max_state_tokens, chat=None,
+            ) for row in rows]
+        finally:
+            # Pinned upstream caches wide-option text/token IDs. Keep that
+            # optimization within one request, including when building fails.
+            self.upstream.prompt._OPT_CACHE.clear()
         return rqs, index, items
 
     def score(self, items, temperature):
